@@ -4,7 +4,11 @@ const bodyParser =require( 'body-parser')
 const userRout =require( './router/user')
 require('dotenv').config()
 const app=express()
-app.use(cors())
+app.use(cors({
+    // origin:'http://localhost:3000',
+    // origin:'*',
+    methods:['GET','POST'], 
+}))
 app.use(bodyParser.json())
 
 
