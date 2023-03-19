@@ -38,3 +38,15 @@ exports.bcryptCompare=(res,password1,password2)=>{
     })
 }
 exports.jwttoken=(id,name)=>jwt.sign({id,name},process.env.JWT_TOKEN)
+
+exports.verify=(res,token)=>{
+    return new Promise((resolve,reject)=>{
+        jwt.verify(token,process.env.JWT_TOKEN,((err,token)=>{
+            if(token){
+                resolve(token)
+            }else{
+                return res.status(400).json({message:'New user,Sign up Now '})
+            }
+        }))
+    })
+}

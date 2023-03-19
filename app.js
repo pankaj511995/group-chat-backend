@@ -2,6 +2,8 @@ const  express=require( 'express')
 const cors =require( 'cors')
 const bodyParser =require( 'body-parser')
 const userRout =require( './router/user')
+const allMessageDetails=require('./router/message')
+const sequelize =require( './util/seqelize')
 require('dotenv').config()
 const app=express()
 app.use(cors({
@@ -13,10 +15,15 @@ app.use(bodyParser.json())
 
 
 app.use('/user',userRout) 
+app.use('/message',allMessageDetails)
 
-const sequelize =require( './models/user')
-// const sequelize =require( './util/seqelize')
+//table creation
+const User=require('./models/user')
+const Message=require('./models/message')
 
-sequelize.sync({force:false}).then(()=>{
+User.hasMany(Message)
+Message.belongsTo(User)
+
+// sequelize.sync({force:false}).then(()=>{
     app.listen(process.env.PORT)
-}).catch(err=>console.log('table not crerated',err))
+// }).catch(err=>console.log('table not crerated',err))
