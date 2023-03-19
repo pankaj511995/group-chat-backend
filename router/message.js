@@ -4,6 +4,6 @@ const authentication=require('../middleware/authorization')
 const router=express.Router()
 
 router.post('/send',authentication.authenticat ,controller.sendmesssage)
-router.get('/allmessage',authentication.authenticat ,controller.getAllMessage)
+router.get('/newmessage',authentication.authenticat ,controller.getlastMessage)
 
 module.exports=router
