@@ -1,21 +1,18 @@
 const Sequelize=require('sequelize')
 const sequelize=require('../util/seqelize')
-const messsage=sequelize.define('Message',{
+const groupcreation=sequelize.define('Group',{
     id:{
         type:Sequelize.INTEGER,
         primaryKey:true,
         autoIncrement:true,
         allowNull:false
     },
-    name:{
+    groupname:{
         type:Sequelize.STRING,
         allowNull:false
-    },
-    message:{
-        type:Sequelize.STRING,
+    },adminId:{
+        type:Sequelize.INTEGER,
         allowNull:false
-        
     }
- 
 }) 
-module.exports=messsage 
+module.exports=groupcreation 

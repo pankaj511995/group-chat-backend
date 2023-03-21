@@ -20,10 +20,17 @@ app.use('/message',allMessageDetails)
 //table creation
 const User=require('./models/user')
 const Message=require('./models/message')
-
+const Group=require('./models/group')
+// const HelperGroup=require('./models/helpergroup')
 User.hasMany(Message)
 Message.belongsTo(User)
+//if group delete then delete all messages which are related to that group
+Group.hasMany(Message,{ onDelete: 'cascade' })
+Message.belongsTo(Group)
+User.belongsToMany(Group, {through:'Helpergroup'})
+Group.belongsToMany(User, {through:'Helpergroup'})
 
-// sequelize.sync({force:false}).then(()=>{
+ 
+// sequelize.sync({force:true}).then(()=>{ 
     app.listen(process.env.PORT)
 // }).catch(err=>console.log('table not crerated',err))
