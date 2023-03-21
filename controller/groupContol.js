@@ -46,12 +46,28 @@ exports.allGroupOfUser=async(req,res)=>{
  }
  exports.allMemberInGroup=async(req,res)=>{
     try{
-        const group=await Group.findOne({attributes:['id'],where:{id:req.body.groupId}})
+        const group=await Group.findOne({attributes:['id','adminId'],where:{id:req.body.groupId}})
         const user=await group.getUsers({attributes:['id','name']})
-        res.status(200).json(user)
+        console.log((group.adminId))
+        res.status(200).json({data:user,admin:group.adminId})
+
     }catch(err){
     service.error(res,'something went wrong','error while gating all group')
     }
  }
 
-  
+  exports.removeMemberFromGroup=async(req,res)=>{
+    try{
+    const{groupId,userId}=req.body
+         const user= await User.findOne({attributes:['id','name'],where:{id:userId}})//taking only id
+             const group= await Group.findOne({attributes:['id'],where:{id:groupId,adminId:req.user.id}})
+          if(user!=null&&group!=null){
+                 await user.removeGroup(group)//removing from group
+                 res.status(200).json({message:`${user.name} has been deleted from this group`})
+          }else{
+            res.status(400).json({message:'only admin can delete from this group'})
+         }
+        }catch(err){
+            service.error(res,'something went wrong','error while gating all group')
+         }
+  }
