@@ -1,9 +1,9 @@
-const express=require('express')
-const controller =require( '../controller/allMessage')
-const authentication=require('../middleware/authorization')
-const router=express.Router()
+const {Router}=require('express')
+const {authenticat}=require('../middleware/authorization')
+const {sendmesssage,getlastMessage} =require( '../controller/allMessage')
+const router=Router()
 
-router.post('/send',authentication.authenticat ,controller.sendmesssage)
-router.get('/newmessage',authentication.authenticat ,controller.getlastMessage)
+router.post('/send',authenticat ,sendmesssage)
+router.post('/newmessage',authenticat ,getlastMessage)
 
 module.exports=router

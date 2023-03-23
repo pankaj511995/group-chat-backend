@@ -16,7 +16,7 @@ exports.signinuser=async(req,res)=>{
     try{
     const {email,password}=req.body
     await servic.validate(res,'please fill all details',email,password)
-    const user=await User.findOne({where:{email:email}})
+    const user=await User.findOne({attributes:['id','name','password'],where:{email:email}})
     if(!user){
         return res.status(404).json({message:'New user Sign up now'})
     }
