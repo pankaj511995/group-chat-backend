@@ -14,7 +14,9 @@ exports.sendmesssage=async (req,res)=>{
 exports.getlastMessage=async(req,res)=>{
     try{
         const{lastmessage,groupId}=req.body
-      const message=await  Message.findAll({offset:Number(lastmessage),attributes:['id','name','message','UserId']},{where:{GroupId:Number(groupId)}})
+        console.log(lastmessage,groupId,'lastcall   is ')
+      const message=await  Message.findAll({where:{GroupId:Number(groupId)}})
+      console.log(message.length)
       res.status(200).json(message)
     }catch(err){
           error(res,'something went wrong','error while while gating all message')

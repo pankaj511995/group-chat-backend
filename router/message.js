@@ -1,6 +1,6 @@
 const {Router}=require('express')
 const {authenticat}=require('../middleware/authorization')
-const {sendmesssage,getlastMessage} =require( '../controller/allMessage')
+const {sendmesssage,getlastMessage} =require( '../controller/Message')
 const router=Router()
 
 router.post('/send',authenticat ,sendmesssage)
