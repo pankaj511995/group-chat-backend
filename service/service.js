@@ -1,6 +1,6 @@
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
-const { resolve } = require('path')
+const path = require('path')
 exports.generatePassword=(password)=>{
     return new Promise((resolve,reject)=>{
         bcrypt.hash(password,Number(process.env.SALT),((err,result)=>{

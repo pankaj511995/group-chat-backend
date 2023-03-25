@@ -60,7 +60,7 @@ exports.allGroupOfUser=async(req,res)=>{
         res.status(200).json({data:user,admin:group.adminId})
 
     }catch(err){
-    error(res,'something went wrong','error while gating all group')
+        error(res,'something went wrong','error while gating all group')
     }
  }
 

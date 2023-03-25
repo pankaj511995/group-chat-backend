@@ -12,7 +12,7 @@ app.use(cors({
     // origin:'http://localhost:3000',
     // origin:'*',
     methods:['GET','POST'], 
-    credentials: true
+    credentials: true 
 }))
 
 
@@ -26,20 +26,9 @@ const io = require('socket.io')(server,{
     }
   });
 
-const groupmessage=io.of('/message/send')
-groupmessage.on('connection',(socket)=>{
-    socket.on('generategroup',group1=>{
-        socket.join(Number(group1));
-    })
-    socket.on('sendmessae',(({group,name,message,id})=>{ 
-        socket.broadcast.to(Number(group)).emit('messagetoall',{message:message,name:name,id:id});
-      console.log(message,name,id,'->',group)
-    }))
-})
-
 //socket
 app.use('/user',userRout) 
-app.use('/message',allMessageDetails)
+app.use('/message',allMessageDetails) 
 app.use('/group',groupRouter)
 
 // socket.emit('sendmessae','sent message')
@@ -51,6 +40,7 @@ app.use('/group',groupRouter)
 const User=require('./models/user')
 const Message=require('./models/message')
 const Group=require('./models/group')
+const { Socket } = require('dgram')
 
 User.hasMany(Message)
 Message.belongsTo(User)
@@ -61,6 +51,24 @@ User.belongsToMany(Group, {through:'Helpergroup'})
 Group.belongsToMany(User, {through:'Helpergroup'})
 
  
-sequelize.sync({force:false}).then(()=>{ 
+// sequelize.sync({force:false}).then(()=>{ 
     server.listen(process.env.PORT)
-}).catch(err=>console.log('table not crerated',err))
+// }).catch(err=>console.log('table not crerated',err))
+
+
+
+
+// sending message to all 
+io.on('connection',(socket)=>{
+    socket.on('generategroup',(room)=>{
+     socket.join(room);
+        
+    })
+    socket.on('sendmessae',(room,name,message,id)=>{ 
+
+      socket.to(room).emit('messagetoall',message,name,id);
+     
+    })
+})
+
+
