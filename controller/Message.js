@@ -1,6 +1,6 @@
 const {error,validate}=require('../service/service')
 const Message=require('../models/message')
-const{getImageFromAwa}=require('../service/S3upload')
+const {Op}=require('sequelize')
 exports.sendmesssage=async (req,res)=>{
    try{
     const{message,groupId}=req.body
@@ -15,8 +15,11 @@ exports.sendmesssage=async (req,res)=>{
 exports.getlastMessage=async(req,res)=>{
     try{
         const{lastmessage,groupId}=req.body
-      const message=await  Message.findAll({
-         where:{GroupId:Number(groupId)}},{offset:lastmessage })
+      const message=await Message.findAll({ where: {[Op.and]: [{ 
+                                          GroupId: Number(groupId) },
+                                           {id:{[Op.gte]:lastmessage}},
+                                           ]},attributes :['id','name','message','UserId']})
+                                       
       res.status(200).json(message)
     }catch(err){
           error(res,'something went wrong','error while while gating all message')
@@ -35,37 +38,3 @@ exports.imageupload=async(req,res)=>{
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-exports.getimagebyKey=async(req,res)=>{
-   // try{
-   //    const result=await getImageFromAwa(req.params.key)
-   //    res.status(200).json(result)
-   // }catch(err){
-   //    error(res,'something went wrong','error while while gating all message')
-   // }
-}

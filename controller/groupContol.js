@@ -2,6 +2,7 @@ const {error}=require('../service/service')
 const Group=require('../models/group')
 const sequelize=require('../util/seqelize')
 const User=require('../models/user')
+const {Op}=require('sequelize')
 
 exports.creategropuAdmin=async(req,res)=>{ 
     const t = await sequelize.transaction();
@@ -25,11 +26,11 @@ exports.addToGroup=async(req,res)=>{
           if(add[0]!=null&&add[1]!=null){
            await add[0].addGroup(add[1])
                  res.status(200).json({message:`successfully added in group`})
-         }else if(add[0]===null){
-            res.status(400).json({message:'user does not exit'})
-         }else{
-            res.status(400).json({message:'only admin can add in this group'})
-         }
+
+         }else if(add[0]===null) res.status(400).json({message:'user does not exit'})
+
+         else res.status(400).json({message:'only admin can add in this group'})
+         
      }catch(err){
      error(res,'user already added in this group','error while adding message in database')
      }
@@ -47,7 +48,7 @@ exports.joinByLink=async(req,res)=>{
 exports.allGroupOfUser=async(req,res)=>{  
     try{
             const lastcheck=req.body.lastcheck
-            const group=await req.user.getGroups({attributes:['id','groupname']})
+            const group=await req.user.getGroups({where:{id:{[Op.gte]:Number(lastcheck)}},attributes:['id','groupname']})
             res.status(200).json(group)
     }catch(err){
     error(res,'something went wrong','error while gating all group')
@@ -55,8 +56,10 @@ exports.allGroupOfUser=async(req,res)=>{
  }
  exports.allMemberInGroup=async(req,res)=>{
     try{
-        const group=await Group.findOne({attributes:['id','adminId'],where:{id:req.body.groupId}})
+        const{lastcheck,groupId}=req.body
+        const group=await Group.findOne({attributes:['id','adminId'],where:{id:groupId}})
         const user=await group.getUsers({attributes:['id','name']})
+        console.log(lastcheck,groupId)
         res.status(200).json({data:user,admin:group.adminId})
 
     }catch(err){
