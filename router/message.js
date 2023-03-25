@@ -6,7 +6,7 @@ const router=Router()
 router.post('/send',authenticat ,controller.sendmesssage)
 router.post('/newmessage',authenticat ,controller.getlastMessage) 
 router.post('/image',authenticat,upload,controller.imageupload)
-router.get('/getimage/:key',authenticat,controller.getimagebyKey)
+
 
 
 module.exports=router
